@@ -11,31 +11,28 @@
         :root { --p: #00d2ff; --bg: #0f172a; --card: #1e293b; --text: #ffffff; }
         body { font-family: 'Segoe UI', sans-serif; background: var(--bg); color: var(--text); margin: 0; display: flex; overflow-x: hidden; height: 100vh; }
         
-        /* 1. LOGIN GATE */
+        /* Login Page */
         #login-gate { position: fixed; inset: 0; background: var(--bg); display: flex; align-items: center; justify-content: center; z-index: 10000; }
         .gate-box { background: var(--card); padding: 40px; border-radius: 20px; text-align: center; border: 2px solid var(--p); width: 300px; }
         
-        /* 2. SIDEBAR (MOBILE RESPONSIVE) */
-        .sidebar { width: 280px; background: var(--card); height: 100vh; position: fixed; left: 0; top: 0; padding: 25px; border-right: 1px solid #334155; z-index: 999; transition: transform 0.3s ease-in-out; }
-        
-        /* Hidden Sidebar for Mobile back button effect */
-        .sidebar.hidden { transform: translateX(-100%); }
+        /* Custom White Popup Box */
+        #customAlert { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.85); z-index: 20001; align-items: center; justify-content: center; }
+        .alert-box { background: white; color: black; padding: 30px; border-radius: 15px; width: 280px; text-align: center; box-shadow: 0 10px 30px rgba(0,0,0,0.5); }
+        .alert-box i { font-size: 60px; margin-bottom: 15px; }
+        .alert-box h3 { margin: 10px 0; font-size: 24px; color: #333; }
+        .alert-box p { color: #666; font-size: 16px; margin-bottom: 20px; }
+        .alert-box button { background: #28a745; color: white; border: none; padding: 12px 40px; border-radius: 8px; cursor: pointer; font-weight: bold; font-size: 16px; }
 
-        .admin-name { font-size: 28px; font-weight: bold; color: var(--p); text-align: center; margin-bottom: 5px; letter-spacing: 2px; }
-        
-        /* X button inside menu */
+        /* Sidebar & Layout */
+        .sidebar { width: 280px; background: var(--card); height: 100vh; position: fixed; left: 0; top: 0; padding: 25px; border-right: 1px solid #334155; z-index: 999; transition: 0.3s; }
+        .admin-name { font-size: 28px; font-weight: bold; color: var(--p); text-align: center; margin-bottom: 5px; }
         .menu-close-x { position: absolute; top: 15px; right: 20px; font-size: 30px; color: #ff4757; cursor: pointer; display: none; }
 
-        .main-content { margin-left: 280px; padding: 20px; width: 100%; box-sizing: border-box; transition: margin 0.3s; }
-        .full-width { margin-left: 0 !important; }
-
-        /* Menu Toggle Button (Visible on mobile) */
+        .main-content { margin-left: 280px; padding: 20px; width: 100%; box-sizing: border-box; }
         .menu-toggle { display: none; position: fixed; top: 15px; left: 15px; font-size: 25px; background: var(--p); color: #000; padding: 10px; border-radius: 8px; z-index: 998; cursor: pointer; }
 
         .section { display: none; background: var(--card); padding: 30px; border-radius: 15px; border: 1px solid #334155; margin-top: 60px; position: relative; }
         .active-section { display: block; animation: fadeIn 0.3s; }
-        
-        /* Section Close Button */
         .sec-close { position: absolute; top: 10px; right: 15px; font-size: 24px; color: #ff4757; cursor: pointer; }
 
         .menu-btn { display: block; width: 100%; padding: 15px; margin: 12px 0; background: #2d3a4f; color: white; border: 1px solid #38bdf8; border-radius: 10px; cursor: pointer; text-align: left; }
@@ -48,21 +45,27 @@
             .menu-toggle, .menu-close-x { display: block; }
         }
 
-        input, select { width: 100%; padding: 12px; margin: 10px 0; border-radius: 8px; border: 1px solid #334155; background: #0f172a; color: white; }
+        input, select { width: 100%; padding: 12px; margin: 10px 0; border-radius: 8px; border: 1px solid #334155; background: #0f172a; color: white; font-size: 16px; }
         .btn-main { background: var(--p); color: #000; border: none; padding: 15px; width: 100%; border-radius: 8px; font-weight: bold; cursor: pointer; }
-        
-        table { width: 100%; border-collapse: collapse; }
-        th, td { padding: 10px; border: 1px solid #334155; text-align: center; font-size: 13px; }
         
         @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
     </style>
 </head>
 <body>
 
+<div id="customAlert">
+    <div class="alert-box">
+        <div id="alertIcon"></div>
+        <h3 id="alertTitle">Status</h3>
+        <p id="alertMsg"></p>
+        <button id="alertBtn" onclick="closeAlert()">OK</button>
+    </div>
+</div>
+
 <div id="login-gate">
     <div class="gate-box">
-        <i class="fas fa-lock" style="font-size: 40px; color: var(--p);"></i>
-        <h2>AUTHENTICATION</h2>
+        <i class="fas fa-lock" style="font-size: 50px; color: var(--p);"></i>
+        <h2 style="color:white; margin: 20px 0;">AUTHENTICATION</h2>
         <input type="password" id="passCode" placeholder="Enter Password">
         <button class="btn-main" onclick="doLogin()">LOGIN</button>
     </div>
@@ -74,46 +77,19 @@
     <i class="fas fa-times menu-close-x" onclick="toggleSidebar()"></i>
     <div class="admin-name">ARABUL</div>
     <hr style="border: 0.1px solid #334155; margin-bottom: 20px;">
-    
     <button class="menu-btn active-btn" onclick="openSec(event, 'genSec')">1. Generate Key</button>
     <button class="menu-btn" onclick="openSec(event, 'activateSec')">2. Enter & Activate</button>
     <button class="menu-btn" onclick="openSec(event, 'statusSec')">3. Key Status</button>
     <button class="menu-btn" onclick="openSec(event, 'dbSec')">4. Database</button>
-    
     <button class="menu-btn" style="border-color: #ff4757; color: #ff4757; margin-top: 50px;" onclick="location.reload()">Logout</button>
 </div>
 
-<div class="main-content" id="mainContent">
+<div class="main-content">
     <div id="genSec" class="section active-section">
         <i class="fas fa-times-circle sec-close" onclick="closeSec()"></i>
         <h2>GENERATE KEY</h2>
         <button class="btn-main" onclick="genRaw()">GENERATE</button>
         <div id="keyOut" style="margin-top:20px; font-size:25px; color:var(--p); text-align:center; border:2px dashed #38bdf8; padding:20px;">---- ---- ----</div>
-    </div>
-
-    <div id="activateSec" class="section">
-        <i class="fas fa-times-circle sec-close" onclick="closeSec()"></i>
-        <h2>ACTIVATE</h2>
-        <input type="text" id="actK" placeholder="Paste Key">
-        <select id="devLim"><option>1 Device</option><option>Unlimited</option></select>
-        <input type="date" id="dateP">
-        <button class="btn-main" style="background:#4ade80;" onclick="activateK()">ACTIVATE</button>
-    </div>
-
-    <div id="statusSec" class="section">
-        <i class="fas fa-times-circle sec-close" onclick="closeSec()"></i>
-        <h2>KEY STATUS</h2>
-        <div style="overflow-x:auto;">
-            <table><thead><tr><th>Key</th><th>Exp</th><th>Status</th></tr></thead><tbody id="statBody"></tbody></table>
-        </div>
-    </div>
-
-    <div id="dbSec" class="section">
-        <i class="fas fa-times-circle sec-close" onclick="closeSec()"></i>
-        <h2>DATABASE</h2>
-        <div style="overflow-x:auto;">
-            <table><thead><tr><th>Key</th><th>Action</th></tr></thead><tbody id="dbBody"></tbody></table>
-        </div>
     </div>
 </div>
 
@@ -132,64 +108,68 @@
     firebase.initializeApp(firebaseConfig);
     const database = firebase.database();
 
+    // Voice Function
+    function speakText(text) {
+        const msg = new SpeechSynthesisUtterance();
+        msg.text = text;
+        msg.lang = 'bn-BD';
+        msg.rate = 0.85;
+        msg.pitch = 0.8;
+        window.speechSynthesis.speak(msg);
+    }
+
+    // Custom Alert Logic
+    function showAlert(type, title, msg) {
+        const box = document.getElementById('customAlert');
+        const icon = document.getElementById('alertIcon');
+        const btn = document.getElementById('alertBtn');
+        document.getElementById('alertTitle').innerText = title;
+        document.getElementById('alertMsg').innerText = msg;
+        
+        if(type === 'success') {
+            icon.innerHTML = '<i class="fas fa-check-circle" style="color: #28a745;"></i>';
+            btn.style.background = '#28a745';
+        } else {
+            icon.innerHTML = '<i class="fas fa-times-circle" style="color: #dc3545;"></i>';
+            btn.style.background = '#dc3545';
+        }
+        box.style.display = 'flex';
+    }
+
+    function closeAlert() { document.getElementById('customAlert').style.display = 'none'; }
+
+    // LOGIN LOGIC: Using 76 as Password
     function doLogin() {
-        if(document.getElementById('passCode').value === "23") {
-            document.getElementById('login-gate').style.display = 'none';
-            loadData();
-        } else { alert("Wrong Password"); }
+        const pass = document.getElementById('passCode').value;
+        if(pass === "76") {
+            // Success
+            speakText("এডমিন আরাবুলের তরফ থেকে আপনাকে ঢোকার অনুমতি দেওয়া হলো");
+            showAlert('success', 'OK Success', 'Access Granted!');
+            setTimeout(() => { 
+                document.getElementById('login-gate').style.display = 'none'; 
+            }, 1500);
+        } else {
+            // Error
+            speakText("আপনার এখানে প্রবেশ করার অনুমতি নেই");
+            showAlert('error', 'Error!', 'Incorrect Password!');
+        }
     }
 
-    function toggleSidebar() {
-        document.getElementById('sidebar').classList.toggle('active');
-    }
-
+    function toggleSidebar() { document.getElementById('sidebar').classList.toggle('active'); }
     function openSec(e, id) {
         document.querySelectorAll('.section').forEach(s => s.classList.remove('active-section'));
-        document.querySelectorAll('.menu-btn').forEach(b => b.classList.remove('active-btn'));
         document.getElementById(id).classList.add('active-section');
-        e.currentTarget.classList.add('active-btn');
-        if(window.innerWidth < 768) toggleSidebar(); // মোবাইল হলে মেনু অটো ক্লোজ হবে
+        if(window.innerWidth < 768) toggleSidebar();
     }
+    function closeSec() { document.querySelectorAll('.section').forEach(s => s.classList.remove('active-section')); }
 
-    function closeSec() {
-        document.querySelectorAll('.section').forEach(s => s.classList.remove('active-section'));
-        document.querySelectorAll('.menu-btn').forEach(b => b.classList.remove('active-btn'));
-    }
-
-    // --- Data Functions (Same as before) ---
     function genRaw() {
         const k = "KEY-" + Math.random().toString(36).substring(2, 10).toUpperCase();
-        database.ref('PendingKeys/' + k).set({ key: k });
-        document.getElementById('keyOut').innerText = k;
-    }
-
-    function activateK() {
-        const k = document.getElementById('actK').value;
-        const d = document.getElementById('devLim').value;
-        const e = document.getElementById('dateP').value;
-        if(!k || !e) return alert("Fill all!");
-        database.ref('PendingKeys/' + k).once('value', snap => {
-            if(snap.exists()) {
-                database.ref('LiveKeys/' + k).set({ key: k, device: d, expiry: e });
-                database.ref('PendingKeys/' + k).remove();
-                alert("Activated!");
-            } else { alert("Invalid"); }
+        database.ref('PendingKeys/' + k).set({ key: k }).then(() => {
+            document.getElementById('keyOut').innerText = k;
+            showAlert('success', 'Success!', 'Key Generated: ' + k);
         });
     }
-
-    function loadData() {
-        database.ref('LiveKeys').on('value', snap => {
-            const sB = document.getElementById('statBody');
-            const dB = document.getElementById('dbBody');
-            sB.innerHTML = ''; dB.innerHTML = '';
-            snap.forEach(c => {
-                const v = c.val();
-                sB.innerHTML += `<tr><td>${v.key}</td><td>${v.expiry}</td><td style="color:#4ade80">OK</td></tr>`;
-                dB.innerHTML += `<tr><td>${v.key}</td><td><button onclick="delK('${v.key}')" style="background:red;color:white;border:none;padding:5px;">Del</button></td></tr>`;
-            });
-        });
-    }
-    function delK(k) { if(confirm("Delete?")) database.ref('LiveKeys/' + k).remove(); }
 </script>
 </body>
 </html>
